@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EcoSmart Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #334155;
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      color: #1e293b;
+      font-size: 2.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e2e8f0;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .card h3 {
+      color: #1e293b;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card h3::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3b82f6;
+    }
+
+    .card p {
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      color: #64748b;
+    }
+
+    .card p span {
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    #heater-status {
+      color: #dc2626 !important;
+    }
+
+    #heater-status:contains("ON") {
+      color: #16a34a !important;
+    }
+
+    #ac-status {
+      color: #dc2626 !important;
+    }
+
+    #light-status {
+      color: #dc2626 !important;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #e2e8f0;
+      outline: none;
+      margin: 1rem 0;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #2563eb;
+      transform: scale(1.1);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #3b82f6;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    button {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 1rem;
+      width: 100%;
+      font-family: inherit;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .serial {
+      grid-column: 1 / -1;
+    }
+
+    .serial h3::before {
+      background: #10b981;
+    }
+
+    #serial-log {
+      background: #1e293b;
+      color: #94a3b8;
+      padding: 1.25rem;
+      height: 180px;
+      overflow-y: auto;
+      border-radius: 10px;
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      border: 1px solid #334155;
+      margin-top: 0.5rem;
+    }
+
+    #serial-log::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #serial-log::-webkit-scrollbar-track {
+      background: #334155;
+      border-radius: 3px;
+    }
+
+    #serial-log::-webkit-scrollbar-thumb {
+      background: #64748b;
+      border-radius: 3px;
+    }
+
+    #serial-log::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Status colors */
+    [id$="-status"] {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+
+      h1 {
+        font-size: 1.875rem;
+        margin-bottom: 2rem;
+      }
+
+      .dashboard {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      #serial-log {
+        height: 150px;
+      }
+    }
+
+    /* Subtle animations */
+    .card {
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Focus states for accessibility */
+    button:focus,
+    input[type="range"]:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: 2px;
+    }
+
+    /* Dark mode styles */
+    body.dark-mode {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #f1f5f9;
+    }
+    body.dark-mode h1 {
+      color: #f1f5f9;
+    }
+    body.dark-mode .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      box-shadow: 0 4px 12px -1px rgba(30, 41, 59, 0.4);
+    }
+    body.dark-mode .card h3 {
+      color: #f1f5f9;
+    }
+    body.dark-mode .card p {
+      color: #cbd5e1;
+    }
+    body.dark-mode .card p span {
+      color: #f1f5f9;
+    }
+    body.dark-mode input[type="range"] {
+      background: #334155;
+    }
+    body.dark-mode input[type="range"]::-webkit-slider-thumb {
+      background: #60a5fa;
+    }
+    body.dark-mode input[type="range"]::-webkit-slider-thumb:hover {
+      background: #3b82f6;
+    }
+    body.dark-mode input[type="range"]::-moz-range-thumb {
+      background: #60a5fa;
+    }
+    body.dark-mode button {
+      background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+      color: #f1f5f9;
+    }
+    body.dark-mode button:hover {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      box-shadow: 0 4px 12px rgba(30, 41, 59, 0.4);
+    }
+    body.dark-mode #serial-log {
+      background: #0f172a;
+      color: #cbd5e1;
+      border: 1px solid #334155;
+    }
+    body.dark-mode #clock {
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <button id="dark-mode-toggle" aria-label="Toggle dark mode" title="Toggle dark mode" style="position:fixed;top:1.25rem;right:1.5rem;z-index:1000;width:40px;height:40px;border-radius:50%;border:none;background:#334155;color:#fff;cursor:pointer;font-size:1.25rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(30,41,59,0.15);transition:background 0.2s;">🌙</button>
+  <h1>EcoSmart Dashboard</h1>
+  <div id="clock" style="text-align:center; font-size:1.1rem; margin-bottom:1.5rem; color:#64748b;"></div>
+  <div class="dashboard">
+    <!-- Heater -->
+    <div class="card">
+      <h3>Heater</h3>
+      <p>Status: <span id="heater-status">OFF</span></p>
+      <p>Temperature: <span id="heater-temp">40</span>°C</p>
+      <input type="range" min="20" max="80" value="40" id="heater-temp-slider" aria-label="Heater temperature" title="Adjust heater temperature" />
+      <br/>
+      <button id="toggle-heater-btn" title="Turn heater on or off">Toggle Heater</button>
+    </div>
+
+    <!-- AC -->
+    <div class="card">
+      <h3>AC</h3>
+      <p>Status: <span id="ac-status">OFF</span></p>
+      <p>Room Temp: <span id="ac-temp">25</span>°C</p>
+      <input type="range" min="18" max="35" value="25" id="ac-temp-slider" aria-label="AC temperature" title="Adjust AC temperature" />
+    </div>
+
+    <!-- Light -->
+    <div class="card">
+      <h3>Light</h3>
+      <p>Status: <span id="light-status">OFF</span></p>
+      <button id="toggle-light-btn" title="Turn light on or off">Toggle Light</button>
+    </div>
+
+    <!-- Serial Monitor -->
+    <div class="card serial">
+      <h3>Serial Monitor</h3>
+      <pre id="serial-log" style="background:#1e293b; padding:1.25rem; height:180px; overflow:auto;"></pre>
+    </div>
+  </div>
+  <script src="dashboard.js"></script>
+</body>
+</html>

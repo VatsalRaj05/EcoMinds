@@ -1,0 +1,40 @@
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE folders
+.vscode/
+.idea/
+*.code-workspace
+
+
+# Arduino/Tinkercad/Simulation exports
+*.ino.*
+*.fzz
+*.fzb
+*.brd
+*.sch
+*.hex
+*.elf
+*.bin
+
+# Temporary/backup files
+*.bak
+*.tmp
+*.swp
+*.log
+*~
+
+# Compiled/output folders
+dist/
+build/
+out/
+export/
+
+# Archives
+*.zip
+*.rar
+*.7z
+
+# Environment or secrets (if added later)
+.env
